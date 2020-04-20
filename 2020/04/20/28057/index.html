@@ -1,9 +1,271 @@
-<?xml version="1.0" encoding="utf-8"?>
-<search>
-  <entry>
-    <title>联合实体关系抽取</title>
-    <url>/2020/04/20/28057/</url>
-    <content><![CDATA[<p>在信息爆炸的时代，数据呈现出规模巨大、模态多样和高速增长等特征，“信息过载”问题日益严重[1]，如何从海量信息中快速准确地获取用户感兴趣地信息已经成为亟需解决的问题[2]。在这种背景下，为使海量自然语言信息变成结构化的形式方便分析[3]，信息抽取技术应运而生。信息抽取从大规模的无结构文本中提取出用户感兴趣的信息，并以结构化或半结构化的形式输出[4]，其主要包括三项子任务：实体抽取、关系抽取和事件抽取。实体抽取是关系抽取和事件抽取的基础，只有先从句中抽取出基本的信息单元，包括人名、地名、机构名、日期、数额、百分比等实体信息，才能深入理解实体之间的语义关系，提炼实体间语义关系的任务便是关系抽取。关系抽取包括广义和狭义两个层面。实体间的关系可被形式化描述为关系三元组，包括两个从句中抽取的实体和一个关系描述，广义的关系抽取式从句子中自动识别这样一组由一对实体和联系这对实体的关系构成的三元组[5]，而狭义的关系抽取以句子和已知的实体对为输入，得到这对实体之间的联系。本文中的关系抽取以广义为主。</p>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto Slab:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="在信息爆炸的时代，数据呈现出规模巨大、模态多样和高速增长等特征，“信息过载”问题日益严重[1]，如何从海量信息中快速准确地获取用户感兴趣地信息已经成为亟需解决的问题[2]。在这种背景下，为使海量自然语言信息变成结构化的形式方便分析[3]，信息抽取技术应运而生。信息抽取从大规模的无结构文本中提取出用户感兴趣的信息，并以结构化或半结构化的形式输出[4]，其主要包括三项子任务：实体抽取、关系抽取和事件抽">
+<meta property="og:type" content="article">
+<meta property="og:title" content="联合实体关系抽取">
+<meta property="og:url" content="http://yoursite.com/2020/04/20/28057/index.html">
+<meta property="og:site_name" content="Cowboy&#39;s Blog">
+<meta property="og:description" content="在信息爆炸的时代，数据呈现出规模巨大、模态多样和高速增长等特征，“信息过载”问题日益严重[1]，如何从海量信息中快速准确地获取用户感兴趣地信息已经成为亟需解决的问题[2]。在这种背景下，为使海量自然语言信息变成结构化的形式方便分析[3]，信息抽取技术应运而生。信息抽取从大规模的无结构文本中提取出用户感兴趣的信息，并以结构化或半结构化的形式输出[4]，其主要包括三项子任务：实体抽取、关系抽取和事件抽">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-20T12:56:47.000Z">
+<meta property="article:modified_time" content="2020-04-20T13:08:20.272Z">
+<meta property="article:author" content="朋克大小姐">
+<meta property="article:tag" content="NLP">
+<meta property="article:tag" content="计算机科学">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/04/20/28057/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>联合实体关系抽取 | Cowboy's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?b74a2df174b0ff314ead042325279016";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cowboy's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/20/28057/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="朋克大小姐">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cowboy's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          联合实体关系抽取
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-04-20 20:56:47 / 修改时间：21:08:20" itemprop="dateCreated datePublished" datetime="2020-04-20T20:56:47+08:00">2020-04-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">学习</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/04/20/28057/" class="post-meta-item leancloud_visitors" data-flag-title="联合实体关系抽取" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">评论数：</span>
+    
+    <a title="valine" href="/2020/04/20/28057/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/04/20/28057/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在信息爆炸的时代，数据呈现出规模巨大、模态多样和高速增长等特征，“信息过载”问题日益严重[1]，如何从海量信息中快速准确地获取用户感兴趣地信息已经成为亟需解决的问题[2]。在这种背景下，为使海量自然语言信息变成结构化的形式方便分析[3]，信息抽取技术应运而生。信息抽取从大规模的无结构文本中提取出用户感兴趣的信息，并以结构化或半结构化的形式输出[4]，其主要包括三项子任务：实体抽取、关系抽取和事件抽取。实体抽取是关系抽取和事件抽取的基础，只有先从句中抽取出基本的信息单元，包括人名、地名、机构名、日期、数额、百分比等实体信息，才能深入理解实体之间的语义关系，提炼实体间语义关系的任务便是关系抽取。关系抽取包括广义和狭义两个层面。实体间的关系可被形式化描述为关系三元组，包括两个从句中抽取的实体和一个关系描述，广义的关系抽取式从句子中自动识别这样一组由一对实体和联系这对实体的关系构成的三元组[5]，而狭义的关系抽取以句子和已知的实体对为输入，得到这对实体之间的联系。本文中的关系抽取以广义为主。</p>
 <a id="more"></a>
 
 <h2 id="背景和意义"><a href="#背景和意义" class="headerlink" title="背景和意义"></a>背景和意义</h2><p>关系抽取技术对构建大规模的可重用知识库、搜索引擎和海量信息处理有着重要意义：通过关系抽取技术，从无结构的自然语言文本中抽取出格式统一的关系数据，有助于计算机快速处理大规模的文本数据，提高处理效率；通过抽取实体之间的语义关系，能够建立多个实体之间广泛的信息关联，有助于建立领域本体，促进知识图谱的构建；通过深入挖掘和分析自然语言文本中的语义关系信息，能够进一步理解和匹配用户的查询意图，从而为用户提供更精准的搜索服务。关系抽取在知识库建设、提问回答系统、生物医学的文本挖掘等领域中也有着重要贡献。由此可见，关系抽取技术不仅具有深刻的理论意义，而且具有广阔的应用前景。</p>
@@ -35,63 +297,263 @@
 <p>(3) 大部分的关系抽取实验于英语，另外一部分实验在中文和阿拉伯文，而ACE数据集中确实包含了这三个语言。模型在不同语言中语种独立性和有效性的研究能够帮助研究语料较少的语言，有很强的普适作用。</p>
 <p>(4) 自然语言处理的深度由语法和语义决定，语料处理的模型的作用很低。语言处理模型的研究能够推进关系抽取的效果，未来有延伸空间。</p>
 <p>本文献综述能够帮助研究者们理清关系抽取的研究方向，了解技术随时间升级进化的趋势，通过洞悉每个模型的优劣，帮助决定哪个方法适合于他们的项目。关系抽取任务在自然语言处理中占有举足轻重的地位，将会影响人们生活的很多方面，推进着研究者们的工作进程。 </p>
-]]></content>
-      <categories>
-        <category>学习</category>
-      </categories>
-      <tags>
-        <tag>NLP</tag>
-        <tag>计算机科学</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>孤独的漫游者</title>
-    <url>/2020/03/20/53348/</url>
-    <content><![CDATA[<p>直觉是我生活的信条，做事三分钟热度和偏爱美国短篇小说成了生活选择的结果。所以随手从新书书架上取下的《弗兰妮与祖伊》挑战了我阅读的极限——塞林格文字里大段的对白和杂乱的天才与信仰，使我迷恋起那种缠绕而疯狂的黑洞式的阅读体验。作者从二十岁立志写作，真正意义上笔耕不辍几十年，研究百家宗教论述，颅内思维碰撞与湮灭。这与思想者博览全书后的哲学笔记不同，塞林格没有笃定的立场和咄咄逼人的嘴，他把人物写得活生生就像邻居一家就是为了真诚地说这就是他最想告诉你的事。于是这次我的直觉在触到塞林格的那一刻起，抓住了这个神秘得像书后作者的话上的剪影一样的美国作家，这就是《九故事》《弗兰妮与祖伊》《抬高房梁，木匠们》《西摩：小传》成为我的偏爱的开始，也是大名鼎鼎的《麦田里的守望者》再次被我翻开的契机。</p>
-<a id="more"></a>
 
-<h2 id="塞林格"><a href="#塞林格" class="headerlink" title="塞林格"></a>塞林格</h2><p>塞林格是黑色头发大鼻子，笑起来嘴巴咧开有点腼腆。深咖啡色的眼睛温柔而深邃，会在你讲话的时候一直安静地看着你，好像你的故事有巨大的吸引力。酒吧里他平和健谈，自负地说他是这个世纪最好的作家的时候，也是打牌吹牛的时候，而你又不得不相信因为你会觉得哦他看起来就像个作家，充满灵感。然而他又很怪，瘦且高，一米九的个子，一天只出一次门，夹着报纸走在街上小孩都不敢从旁边跑过。他立志写作开始的时间很早，根本不像个能继承财产的纨绔二代，从十八九岁开始的事业贯穿了他的一生。投稿给纽约客，屡战屡败，费劲参军在欧洲大陆上参加二战的时候他就在写《麦田里的守望者》，战后西摩的自杀故事终于登报纽约客，成为文学界耀眼新星着实令人愉快，而后功成名就又厌恶虚伪名利的四十年里他依然闭门写作，就这样也只出版了少量的短篇和几本长篇。他着实奇怪，读者意林上多了是有关他怪癖的文章，一说起《麦田里的守望者》就是其中高级扫雷碰到地雷般的场面——遍地开花，脏话炸得千奇百怪，还有他不愿出版手稿全锁的孤僻。高个在安静的房间里独自抽烟，打字机的声音敲走的时间随着墙上的影子从一头走到另一头，这是他的深咖啡色的世界。</p>
-<p>我们无法完全体会别人选择的原因，仅从资料管中窥豹。塞林格因为体质参军过程艰辛，而他又一心从军（也许为了体验生活），费了不少劲通过了体检。美军的二战故事是影视作品的宠儿，塞林格就是那抽着烟不知何时回家的普通士兵。1944年他跟随部队来到了欧洲大陆，在激烈的战争里被迫反抗。二战结束他与其他人一样伤痕累累，目睹德军的暴行与尸横遍野的沟壑他写信道自己每次呼吸都会想起尸体烧焦的气味。战后他成了一名审讯纳粹战犯的侦探，PTSD伴随着他的侦察工作。绯闻中说他娶了一名德国纳粹妻子又因观念不合分开，就这样他的香蕉鱼游到了纽约客，名声大噪。</p>
-<p>于是简而言之，塞林格的故事是战后纽约的故事。</p>
-<p>我知道的有关他写作与读书的事，就是他读了太多的书。他研究了许多宗教信仰，宣称相信又放弃相信。他是希望真实的，而商业与交易充斥着虚伪，他不愿接受别人的采访和二次描写，所以闭门不出。他希望把自己的作品和想法全部、毫无保留地亲自传递给读者，而沟通的桥梁只有他的作品。远离幻想与虚伪的，将文字赋予真实的思考，这样才能点燃文字中的火焰，塞林格对朋友说。</p>
-<p>这是我偷偷观察到的塞林格，重点倒不是他到底有多神秘，而是他的作品真的是他妈的棒呆了就像要他妈把我脑子哭出来了一样。</p>
-<h2 id="麦田里的守望者"><a href="#麦田里的守望者" class="headerlink" title="麦田里的守望者"></a>麦田里的守望者</h2><p>不管作者怎么夹杂回忆录，《麦田里的守望者》就是一个十七岁男孩圣诞假期前被高中开除后在纽约街头游荡的故事。风靡全球的译本想必不用多说，不过可能会有人和我一样，在高中时代读过后除了脏话没理解一星半点。</p>
-<p>我是想说“麦田里的守望者”究竟是什么。在街头游荡的时候，主人公看到一家三口从教堂刚出来走回家。父亲母亲随意讲话，一点都不注意小孩，而小男孩踢踢踏踏边走边玩，汽车喇叭声刹车声刺啦刺啦响成一片，霍尔顿居然还听到了他在唱歌，“你要是在麦田捉到了我”。后来菲比问他将来最喜欢当什么，霍尔顿经过纽约二日游，好像只记得这句歌词了似的，就是想做麦田边守望孩子们的唯一的大人。我并不能理解到位这些寓意，但读了这样的作品很难不想说点什么。霍尔顿十七岁，于大人来说还是个受管教的小孩，他自己觉得已经足够独立。上了大学的朋友嘲笑他”什么时候才能长大“，同时他也讨厌那个上大学的朋友，讨厌他假模假样地谈论性和精神分析。霍尔顿喜欢孩子般的真诚和天真，他会被一点小事感动，比如修女贫穷地吃着面包，老菲比敏锐的观察和关心，这就是他觉得长大以后可能会失去的东西，即使他有很多钱看了遍纽约的大人世界，他还是觉得小孩世界好，所以他想拥有这样一个麦田，让孩子们被关注，永远保持善良和天真。他可能觉得小孩的天真就是人类的本性，因为大人披着被物质消磨得假模假样的外壳。霍尔顿总是强调童贞，在他意识里性是青少年和成人的分水岭，而成年这种事绵长又突然，当喝酒、性、跳舞没那么重要的时候，成年期也悄然到来。</p>
-<p>霍尔顿又真的只有十七岁，他用起比喻来只有夸张手法，咒骂花样百出地代替了他突然的震惊，他的世界非常狭窄——我怀疑塞林格让他转四次学就是多写几次他不同阶级的舍友，然而没什么用，青少年难道不都一个模样？他那种吃了五十头大象般的震惊就像童书，天真可爱。漫游纽约本是一个简单的事，主角是爱丽丝那么就是旋转木马的浪漫，主角是菲利普马洛就是酒吧酒吧和悲惨撞车，然而这里是一个絮絮叨叨的青少年，他有宇宙爆炸的活力和矛盾的心理状态，你不听那些棒球手套的故事就不会想要跟着他看中央公园的鸭子。</p>
-<p>萨特的存在主义小册子里说，任何意图都表现为企图超越或否定限制，因而总能被理解。后来的霍尔顿长成什么样子不重要了，十七岁的他对一切在乎得要死类似《杀死一只知更鸟》里对善的渴望就是一种榜样，甚至他娇滴滴地说每回忆起那些故事我就他妈想念他们想的要死，高中生读完放下书哗一声冲出房间找同学打起了篮球这就是理解。好了，青少年的故事到此结束，我曾经看过评论家说塞林格是个”到时间就毕业“的作家，意思是初高中毕业了就没必要再读他，我着实想把这位评论家头打爆，接下来的故事便是塞林格最好的作品，他才华横溢从不局限畅销书。</p>
-<h2 id="The-Glasses"><a href="#The-Glasses" class="headerlink" title="The Glasses"></a>The Glasses</h2><p>首先为韦斯·安德森正名一波，他童话般的幻想是能与格拉斯家族产生共鸣的。《天才一族》有些瑕疵不过没关系，发散的对话只能挥发在白纸上的引号里，即在塞林格的几本有关格拉斯一家的书中。</p>
-<p>格拉斯一家的七个孩子都呈现早熟的特征，家族传承式的广播放送经历冠以他们天才名号。这是最奇特的一点，倒不是大哥衣服小弟穿，而是大哥读的哲学书一并传给了他的弟弟妹妹们。所以当二十几岁的大哥一枪崩了自己之后，你很难不去想象是不是祖伊和巴蒂有一个模仿着西摩延续了大哥的意志。当我讲西摩的时候我是迷糊的，他看起来就像我的大哥，一个遥不可及的形象，我永远没法完全地了解他因为他年长且总是在我之前自己做决定。况且西摩总是别人故事里的剪影，是他自己婚礼上没有出现的主人公，是巴蒂记忆里最敬仰的哥哥，神一般的存在，唯一一次主人公就是那场自杀，像太阳落入地平线，完美谢幕。</p>
-<p>《弗兰妮与祖伊》起始于格拉斯家最小的女儿弗兰妮在无法忍受的约会中晕倒，被送回了家。巴蒂辩解祖伊劝导弗兰妮的故事只是一卷主角两女一男的家庭录像带——祖伊，弗兰妮和妈妈，明媚的周末女大学生嚎啕大哭为哪般，祖伊和妈妈都想知道，只有弗兰妮的老父亲老想着要给女儿拿个橘子吃。你看这父亲很明显点了题，母亲嘴里他不愿面对任何事情，他就像许多家庭里的中年男性角色，他不愿意自己有那么丰富的感情，操劳家里的事情一并交给母亲，他没什么不愉快，有了不愉快就开着收音机眯起眼睛等它烟消云散。突然，精神崩溃的女儿哭着回到了家，你可以想象他的束手无措，安慰的话说不出口，也无法理解女儿崩溃大哭的原因——也许她哭累了想喝点水呢？我太喜欢这里提了一嘴的父亲，他是塞林格稳重笔力的代表，是俏皮话和天真故事外更真实的形象。</p>
-<p>不过，重点还是弗兰妮，大学生活让她痛哭流涕，只能学朝圣之书里的农民整日整夜念祈祷词渴望寻得真理。前面交代了格拉斯一家都是早熟的孩子，她也不例外。她厌恶愚蠢空洞的大学，身边每个人都利益至上，洋洋得意地展示微不足道的自我，而上课学到的知识是为了打装备获钱权——和童话中通往智慧的道路大相径庭。她的做法也相当简单，尖锐地挑刺，逃离假模假样的舞台表演，回家躺着整天祈祷。嘿，祖伊这个嘲讽专家，毫不圆滑地告诉她，在社会中找到立足之地表演给别人看是无法逃避的责任，没有任何神明能温柔拥抱你告诉你未来可期，关键是你有自己的信念并且回到人群中，像西摩回到普通人的婚礼中接受不清醒的淹没自己的幸福感中，像十七岁的霍尔顿孤独地漫游纽约城又选择回家，你的神明是真诚的天性，虽然其他人他们也是这样。</p>
-<p>戳破幻想泡沫的结果是污秽又悲凉的，不过祖伊还是给弗兰妮打了个来自哥哥巴蒂的电话（他更想变成西摩，要是可以的话），此时这个故事又变得那么漂亮，仿佛弗兰妮终于肯接过父亲递来的橘子，金黄的果粒散发酸甜的阳光的香气。我从没有如此喜欢过这样一个故事（当然这是夸张），它温柔地传递着多面的爱，不论这爱来自塞林格读过的耶稣、乔达摩、老子、莎士比亚、六祖慧能还是默罕默德。</p>
-<h2 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h2><p>塞林格自己不爱出门，但他的故事里总有那么一个叛逆的主角孤独地漫游着，寻找自我。或者我们根本不需要知道他不爱出门这种事，只跟着他的主角，穿梭于二战后的纽约城，最后沉默地望进自己空洞的心核。</p>
-]]></content>
-      <categories>
-        <category>读书</category>
-      </categories>
-      <tags>
-        <tag>塞林格</tag>
-        <tag>文学</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2020/03/05/16107/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<a id="more"></a>
+    </div>
 
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+    
+    
+    
+        
 
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>朋克大小姐
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2020/04/20/28057/" title="联合实体关系抽取">http://yoursite.com/2020/04/20/28057/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
 
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" rel="tag"># 计算机科学</a>
+          </div>
 
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-]]></content>
-  </entry>
-</search>
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/20/53348/" rel="prev" title="孤独的漫游者">
+      <i class="fa fa-chevron-left"></i> 孤独的漫游者
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景和意义"><span class="nav-number">1.</span> <span class="nav-text">背景和意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集"><span class="nav-number">2.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">3.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#国内外研究现状"><span class="nav-number">4.</span> <span class="nav-text">国内外研究现状</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#传统模型"><span class="nav-number">4.1.</span> <span class="nav-text">传统模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#联合实体关系抽取模型"><span class="nav-number">4.2.</span> <span class="nav-text">联合实体关系抽取模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#展望与总结"><span class="nav-number">5.</span> <span class="nav-text">展望与总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">朋克大小姐</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/theDyingofLight" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;theDyingofLight" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wsy970722@163.com" title="E-Mail → mailto:wsy970722@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朋克大小姐</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : true,
+      appId      : 'lkwsc5SzdArmVA441q2xohg0-gzGzoHsz',
+      appKey     : '7SeDPIMfCEr6DzAdlIO73fm3',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
